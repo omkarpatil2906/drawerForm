@@ -9,14 +9,10 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { FaEyeSlash } from "react-icons/fa6";
 import FeedbackForm from '../rightcolumn/form/FeedbackForm';
 import { FaHome } from "react-icons/fa";
 import { RiMenu2Fill } from "react-icons/ri";
@@ -24,6 +20,10 @@ import { Routes, Route } from 'react-router-dom'
 import Consultant from '../rightcolumn/form/Consultant';
 import Staff from '../rightcolumn/form/Staff';
 import Patient from '../rightcolumn/form/Patient';
+import { MdOutlineDashboardCustomize } from "react-icons/md";
+import { FaCircleArrowLeft } from "react-icons/fa6";
+import DashBoard from '../rightcolumn/dashboard/DashBoard';
+import {useNavigate} from 'react-router-dom'
 
 
 const drawerWidth = 240;
@@ -94,6 +94,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function MiniDrawer() {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -121,7 +122,7 @@ export default function MiniDrawer() {
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <FaEyeSlash /> : <FaEyeSlash className="text-[#3F2860]" />}
+            {theme.direction === 'rtl' ? <FaCircleArrowLeft /> : <FaCircleArrowLeft className="text-[#3F2860]" />}
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -129,11 +130,22 @@ export default function MiniDrawer() {
         <List>
 
           <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={()=>navigate("/")} >
+              <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
+                <MdOutlineDashboardCustomize size={25} className="text-[#3F2860]" />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] ' />
+            </ListItemButton>
+            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={()=>navigate("/home")}>
               <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
                 <FaHome size={25} className="text-[#3F2860]" />
               </ListItemIcon>
               <ListItemText primary="Home " sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' />
+            </ListItemButton> <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+              <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
+                <FaHome size={25} className="text-[#3F2860]" />
+              </ListItemIcon>
+              <ListItemText primary="" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' />
             </ListItemButton>
           </ListItem>
 
@@ -142,7 +154,8 @@ export default function MiniDrawer() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <Routes>
-          <Route path="/" element={<FeedbackForm />} >
+          <Route path='/' element={<DashBoard/>} />
+          <Route path="/home" element={<FeedbackForm />} >
             <Route path="consultant" element={<Consultant />} />
             <Route path="staff" element={<Staff />} />
             <Route path="patient" element={<Patient />} />

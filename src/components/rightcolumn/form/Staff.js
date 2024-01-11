@@ -2,8 +2,11 @@ import React from 'react'
 
 function Staff() {
   return (
-    <div>
-      staff
+    <div className='flex justify-center'>
+      <div className='w-[85%] mt-7'>
+        Staff
+      </div>
+
     </div>
   )
 }
