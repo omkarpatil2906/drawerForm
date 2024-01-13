@@ -24,6 +24,8 @@ import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import DashBoard from '../rightcolumn/dashboard/DashBoard';
 import {useNavigate} from 'react-router-dom'
+import { MdOutlineAnalytics } from "react-icons/md";
+import QuestionTemp from '../rightcolumn/form/QuestionTemp';
 
 
 const drawerWidth = 240;
@@ -143,9 +145,9 @@ export default function MiniDrawer() {
               <ListItemText primary="Home " sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' />
             </ListItemButton> <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
               <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
-                <FaHome size={25} className="text-[#3F2860]" />
+                <MdOutlineAnalytics size={25} className="text-[#3F2860]" />
               </ListItemIcon>
-              <ListItemText primary="" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' />
+              <ListItemText primary="Analytics" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' onClick={()=>navigate("/analytics")} />
             </ListItemButton>
           </ListItem>
 
@@ -160,6 +162,8 @@ export default function MiniDrawer() {
             <Route path="staff" element={<Staff />} />
             <Route path="patient" element={<Patient />} />
           </Route>
+          <Route path='/analytics' element={<QuestionTemp/>} />
+
         </Routes>
       </Box>
     </Box>
