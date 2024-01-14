@@ -162,7 +162,7 @@ export default function MiniDrawer() {
             <Route path="staff" element={<Staff />} />
             <Route path="patient" element={<Patient />} />
           </Route>
-          <Route path='/analytics' element={<QuestionTemp/>} />
+          <Route path='/temp' element={<QuestionTemp/>} />
 
         </Routes>
       </Box>
