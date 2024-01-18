@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -163,7 +163,6 @@ export default function MiniDrawer() {
             <Route path="patient" element={<Patient />} />
           </Route>
           <Route path='/temp' element={<QuestionTemp/>} />
-
         </Routes>
       </Box>
     </Box>

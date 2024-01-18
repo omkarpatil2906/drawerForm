@@ -9,7 +9,7 @@ function FeedbackForm() {
                     <p className='text-sm'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur, aspernatur.</p>
                 </div>
                 <div className='mt-3 flex justify-center'>
-                    <img src="https://www.culturemonkey.io/employee-engagement/content/images/size/w1200/2023/05/employee-feedback-program.png" className='lg:h-[300px] lg:w-[440px] shadow-xl' alt="" />
+                    <img src="https://www.culturemonkey.io/employee-engagement/content/images/size/w1200/2023/05/employee-feedback-program.png" className='lg:h-[300px] lg:w-[440px] border-black shadow-xl' alt="" />
                 </div>
             </div>
             <div className='w-full lg:w-[45%] border-2 rounded-md border-[#3F2860] h-[440px] lg:h-[500px] p-5'>
