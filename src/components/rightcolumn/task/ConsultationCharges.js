@@ -12,40 +12,114 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import { MdDelete } from "react-icons/md";
-
-
+import { toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ConsultationCharges() {
-
   const obj = {
     fromTime: "",
     toTime: "",
-  }
+    consultationCharges: "",
+    followCharges: "",
+    isFree: false,
+    followUpApplication: false,
+    day:''
+  };
 
   const [formData, setFormData] = useState(obj);
   const [tableData, setTableData] = useState([]);
-  const[followCharges, setFollowCharges] = useState(false)
 
   let d = new Date();
   let day = d.getDay()
 
-  const handleOnChange = (key, value) => {
-    setFormData({...formData, [key]: value});
+  const HandleChange = (event) => {
+    const { name, value, checked, type } = event.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value,
+    });
+  };
+
+  const AddFromTime = (e) => {
+    setFormData({ ...formData, fromTime: e.format("HH:MM A") });
+  };
+
+  const AddToTime = (e) => {
+    setFormData({ ...formData, toTime: e.format("HH:MM A") });
   };
 
   const submitData = () => {
-    setTableData([...tableData, formData])
-  }
 
+    const isTimeSlotExists = tableData.some(
+      (item) => 
+      (formData.fromTime >= item.fromTime && formData.fromTime < item.toTime ) ||
+      (formData.toTime > item.fromTime && formData.toTime <= item.toTime) ||
+      (formData.toTime <= item.fromTime && formData.toTime >= item.toTime)
+    )
+    if(isTimeSlotExists){
+      toast.error('Time slot already booked!', {
+        position: 'top-right',
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+    }
+     else if (
+      formData.fromTime === "" ||
+      formData.toTime === "" ||
+      (formData.consultationCharges === "" && formData.isFree === true ? formData.consultationCharges : 0) ||
+      (formData.followUpApplication && formData.followCharges === "")
+    ) {
+      toast.error('Fill all input Fields!', {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+    } else {
+      setTableData([...tableData, formData]);
+
+      toast.success('Appointment Successful!', {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+    }
+  };
+
+
+  const resetData = () => {
+    setFormData({
+      fromTime: "",
+      toTime: "",
+      consultationCharges: "",
+      followCharges: "",
+      isFree: false,
+      followUpApplication: false,
+    })
+  }
 
   const handleDelete = (i) => {
-   let Data = [...tableData]
-   Data.splice(i,1) 
-   setTableData(Data)
-  }
- 
-
-
+    let Data = [...tableData];
+    Data.splice(i, 1);
+    setTableData(Data);
+  };
 
   return (
     <div className='m-3 '>
@@ -58,13 +132,12 @@ function ConsultationCharges() {
                 <MenuItem value={"1"}  >Hosptal</MenuItem>
               </Select>
             </FormControl>
-
           </div>
 
           <div>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Week</InputLabel>
-              <Select label="Week" defaultValue={day}>
+              <Select label="Week" onChange={HandleChange} defaultValue={day}>
                 <MenuItem value={7}>Sunday</MenuItem>
                 <MenuItem value={1}>Monday</MenuItem>
                 <MenuItem value={2}>Tuesday</MenuItem>
@@ -81,15 +154,10 @@ function ConsultationCharges() {
               <DemoContainer components={['TimePicker']}>
                 <TimePicker
                   label="From Time"
-                  viewRenderers={{
-                    hours: renderTimeViewClock,
-                    minutes: renderTimeViewClock,
-                    seconds: renderTimeViewClock,
-                  }}
-                  onChange={(value) => handleOnChange('fromTime', value)}
+                  viewRenderers={{ hours: renderTimeViewClock, minutes: renderTimeViewClock, seconds: renderTimeViewClock, }}
+                  onChange={AddFromTime}
                   className='w-[100%]'
                 />
-
               </DemoContainer>
             </LocalizationProvider>
           </div>
@@ -104,7 +172,7 @@ function ConsultationCharges() {
                     minutes: renderTimeViewClock,
                     seconds: renderTimeViewClock,
                   }}
-                  onChange={(value) => handleOnChange('toTime', value)}
+                  onChange={AddToTime}
                   className='w-[100%]'
                 />
               </DemoContainer>
@@ -112,32 +180,55 @@ function ConsultationCharges() {
           </div>
 
           <div>
-            <TextField type='number' fullWidth label="Consultation Charges" />
+            <TextField
+              type='number'
+              name='consultationCharges'
+              disabled={formData.isFree}
+              value={formData.consultationCharges}
+              onChange={HandleChange}
+              fullWidth
+              label="Consultation Charges"
+            />
           </div>
-
           <div>
-            <TextField type='number' disabled={!followCharges}  fullWidth label="Follow up Charges" />
+            <TextField
+              type='number'
+              disabled={!formData.followUpApplication}
+              onChange={HandleChange}
+              name='followCharges'
+              value={formData.followCharges}
+              fullWidth
+              label="Follow up Charges"
+            />
           </div>
 
         </div>
         <div className='flex flex-col justify-end '>
           <div>
-            <FormControlLabel control={<Checkbox />} label="Is Free" />
-            <FormControlLabel control={<Checkbox />} onChange={(e) => setFollowCharges(e.target.checked)} label="Follow up Application" />
+            <FormControlLabel
+              control={<Checkbox />}
+              checked={formData.isFree}
+              onChange={HandleChange}
+              name="isFree"
+              label="Is Free"
+            />
+            <FormControlLabel
+              control={<Checkbox />}
+              checked={formData.followUpApplication}
+              onChange={HandleChange}
+              name="followUpApplication"
+              label="Follow up Application"
+            />
           </div>
           <div>
             <FormControlLabel control={<Checkbox defaultChecked />} label="Active" />
-            <Button>Reset</Button>
+            <Button onClick={resetData}>Reset</Button>
             <Button onClick={submitData}>Add</Button>
-
           </div>
         </div>
-
       </div>
-
-
       <div className='mt-7'>
-        <table className='w-full'>
+        <table className='w-full overflow-x-auto'>
           <tr className='bg-blue-300  '>
             <th className='p-3'>Action</th>
             <th className='p-3'>From Time</th>
@@ -146,17 +237,22 @@ function ConsultationCharges() {
             <th className='p-3'>Follow Up charge</th>
             <th className='p-3'>Active</th>
             <th className='p-3'>isfree</th>
+            <th className='p-3'>Day</th>
           </tr>
           {
-            tableData.map((item , i) => (
+            tableData.map((item, i) => (
               <tr className='text-center' key={i} >
-                <td className='p-3 text-red-600 text-2xl text-center' onClick={()=>handleDelete(i)}><MdDelete/></td>
-                <td className='p-3 '>{item.fromTime.format("HH:MM A")}</td>
-                <td className='p-3'>{item.toTime.format("HH:MM A")}</td>
+                <td className='p-3 text-red-600 text-2xl text-center' onClick={() => handleDelete(i)}><MdDelete /></td>
+                <td className='p-3 '>{item.fromTime}</td>
+                <td className='p-3'>{item.toTime}</td>
+                <td className='p-3'>{item.isFree === true ? 0 : `${formData.consultationCharges}`}</td>
+                <td className='p-3'>{item.followUpApplication === true ? `${formData.followCharges}` : 0}</td>
+                <td className='p-3'><button className='border-2 border-green-500 px-4 text-green-500 font-semibold pb-1  rounded-md'> Active</button></td>
+                <td className='p-3'>{item.isFree === true ? 'Yes' : 'No'}</td>
+                <td className='p-3'>{item.day}</td>
               </tr>
             ))
           }
-
         </table>
       </div>
 
