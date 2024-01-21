@@ -16,6 +16,11 @@ import { toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function ConsultationCharges() {
+  const d = new Date();
+  const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const defaultDay = daysOfWeek[d.getDay()];
+
+
   const obj = {
     fromTime: "",
     toTime: "",
@@ -23,22 +28,26 @@ function ConsultationCharges() {
     followCharges: "",
     isFree: false,
     followUpApplication: false,
-    day:''
+    day: defaultDay
   };
 
   const [formData, setFormData] = useState(obj);
   const [tableData, setTableData] = useState([]);
 
-  let d = new Date();
-  let day = d.getDay()
 
   const HandleChange = (event) => {
-    const { name, value, checked, type } = event.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+    const { name, value, type, checked } = event.target;
+  
+    setFormData((prevFormData) => {
+      if (type === 'checkbox') {
+        return { ...prevFormData, [name]: checked };
+      } else {
+        return { ...prevFormData, [name]: value, day: name === 'week' ? value : defaultDay };
+      }
     });
   };
+  
+
 
   const AddFromTime = (e) => {
     setFormData({ ...formData, fromTime: e.format("HH:MM A") });
@@ -50,13 +59,17 @@ function ConsultationCharges() {
 
   const submitData = () => {
 
-    const isTimeSlotExists = tableData.some(
-      (item) => 
-      (formData.fromTime >= item.fromTime && formData.fromTime < item.toTime ) ||
-      (formData.toTime > item.fromTime && formData.toTime <= item.toTime) ||
-      (formData.toTime <= item.fromTime && formData.toTime >= item.toTime)
-    )
-    if(isTimeSlotExists){
+    const isTimeSlotExists = tableData.some((item) => {
+      const sameDay = item.day === formData.day;
+    
+      return sameDay && (
+        (formData.fromTime >= item.fromTime && formData.fromTime < item.toTime) ||
+        (formData.toTime > item.fromTime && formData.toTime <= item.toTime) ||
+        (formData.toTime <= item.fromTime && formData.toTime >= item.toTime)
+      );
+    });
+    
+    if (isTimeSlotExists) {
       toast.error('Time slot already booked!', {
         position: 'top-right',
         autoClose: 1000,
@@ -69,7 +82,7 @@ function ConsultationCharges() {
         transition: Bounce,
       });
     }
-     else if (
+    else if (
       formData.fromTime === "" ||
       formData.toTime === "" ||
       (formData.consultationCharges === "" && formData.isFree === true ? formData.consultationCharges : 0) ||
@@ -87,7 +100,7 @@ function ConsultationCharges() {
         transition: Bounce,
       });
     } else {
-      setTableData([...tableData, formData]);
+      setTableData([...tableData, { ...formData, day: formData.day }]);
 
       toast.success('Appointment Successful!', {
         position: "top-right",
@@ -137,15 +150,16 @@ function ConsultationCharges() {
           <div>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Week</InputLabel>
-              <Select label="Week" onChange={HandleChange} defaultValue={day}>
-                <MenuItem value={7}>Sunday</MenuItem>
-                <MenuItem value={1}>Monday</MenuItem>
-                <MenuItem value={2}>Tuesday</MenuItem>
-                <MenuItem value={3}>Wednesday</MenuItem>
-                <MenuItem value={4}>Thursday</MenuItem>
-                <MenuItem value={5}>Friday</MenuItem>
-                <MenuItem value={6}>Saturday</MenuItem>
+              <Select label="Week" onChange={HandleChange} defaultValue={defaultDay} name="week">
+                <MenuItem value="Sunday">Sunday</MenuItem>
+                <MenuItem value="Monday">Monday</MenuItem>
+                <MenuItem value="Tuesday">Tuesday</MenuItem>
+                <MenuItem value="Wednesday">Wednesday</MenuItem>
+                <MenuItem value="Thursday">Thursday</MenuItem>
+                <MenuItem value="Friday">Friday</MenuItem>
+                <MenuItem value="Saturday">Saturday</MenuItem>
               </Select>
+
             </FormControl>
           </div>
 
@@ -245,14 +259,15 @@ function ConsultationCharges() {
                 <td className='p-3 text-red-600 text-2xl text-center' onClick={() => handleDelete(i)}><MdDelete /></td>
                 <td className='p-3 '>{item.fromTime}</td>
                 <td className='p-3'>{item.toTime}</td>
-                <td className='p-3'>{item.isFree === true ? 0 : `${formData.consultationCharges}`}</td>
-                <td className='p-3'>{item.followUpApplication === true ? `${formData.followCharges}` : 0}</td>
+                <td className='p-3'>{item.isFree === true ? 0 : item.consultationCharges}</td>
+                <td className='p-3'>{item.followUpApplication === true ? item.followCharges : 0}</td>
                 <td className='p-3'><button className='border-2 border-green-500 px-4 text-green-500 font-semibold pb-1  rounded-md'> Active</button></td>
                 <td className='p-3'>{item.isFree === true ? 'Yes' : 'No'}</td>
                 <td className='p-3'>{item.day}</td>
               </tr>
             ))
           }
+
         </table>
       </div>
 
