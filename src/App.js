@@ -6,8 +6,8 @@ import ManageConsultation from './components/rightcolumn/task/ManageConsultation
 function App() {
   return (
    <div>
-    {/* <DrawerDash/> */}
-    <ManageConsultation/>
+    <DrawerDash/>
+    {/* <ManageConsultation/> */}
    </div>
   );
 }

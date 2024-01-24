@@ -1,44 +1,65 @@
-import React from 'react'
-import Select from 'react-select'
+import React from 'react';
+import Select from 'react-select';
 
-function Deparment() {
-   
-  const depData =[
-    "pharmacy" , 
-    "Casualty/Emergency" ,
-    "Neonatal",
-    "Dietetice",
-    "Hematology1",
-    "Oncology",
-    "Physiotheraphy",
-    "Pathalogy",
-    "Critic Care",
-    "Cardiology",
-  ]
+function Department({ selectedDepData, setSelectedDepData }) {
+  const depData = [
+    
+    { id:1, department:"pharmacy"},
+    { id:2, department:"Casualty/Emergency"},
+    { id:3, department:"Neonatal"},
+    { id:4, department:"Dietetics"},
+    { id:5, department:"Hematology1"},
+    { id:6, department:"Oncology"},
+    { id:7, department:"Physiotherapy"},
+    { id:8, department:"Pathology"},
+    { id:9, department:"Critical Care"},
+    { id:10,department:"Cardiology"},
+  ];
 
-    const options = [
-        { value: 'Multispeciality', label: 'Allience Multispeciality Hospital' }
-      ]
+
+
+  const options = [
+    { value: 'Multispeciality', label: 'Alliance Multispeciality Hospital' },
+  ];
+
+  const handleDepDataSelect =  (department) => {
+    if (selectedDepData.includes(department)) {
+        setSelectedDepData(selectedDepData.filter(dep => dep !== department));
+    } else {
+        setSelectedDepData([...selectedDepData, department]);
+        console.log(department);
+    }
+};
+
   return (
     <div className='m-2'>
-      <Select options={options} defaultValue={options[0]} />
-
+      <Select
+        options={options}
+        isMulti
+        onChange={handleDepDataSelect}
+        value={selectedDepData.map(dep => ({ value: dep, label: dep }))}
+      />
       <div className='mt-3 border'>
         <table>
-          <tr>
-            <th className='bg-blue-200 text-center p-2 w-[100vh]'>Deparment</th>
-          </tr>
-          {
-            depData.map((user)=>(
-              <tr>
-                <td className='border p-2'>{user}</td>
+          <thead>
+            <tr>
+              <th className='bg-[#34568B] text-white text-center p-2 w-[100vh]'>Department</th>
+            </tr>
+          </thead>
+          <tbody>
+            {depData.map((user) => (
+              <tr key={user.id}>
+                <td className={`border p-2 cursor-pointer ${selectedDepData.includes(user.department) ? 'bg-blue-400' : ''}`}
+                onClick={()=>handleDepDataSelect(user.department)}>
+                  {user.department}
+                </td>
               </tr>
-            ))
-          }
+            ))}
+          </tbody>
         </table>
       </div>
     </div>
-  )
+  );
 }
 
-export default Deparment
+export default Department;

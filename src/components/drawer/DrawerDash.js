@@ -26,6 +26,8 @@ import DashBoard from '../rightcolumn/dashboard/DashBoard';
 import {useNavigate} from 'react-router-dom'
 import { MdOutlineAnalytics } from "react-icons/md";
 import QuestionTemp from '../rightcolumn/form/QuestionTemp';
+import ManageConsultation from '../rightcolumn/task/ManageConsultation';
+import { LuCalendarCheck2 } from "react-icons/lu";
 
 
 const drawerWidth = 240;
@@ -143,11 +145,18 @@ export default function MiniDrawer() {
                 <FaHome size={25} className="text-[#3F2860]" />
               </ListItemIcon>
               <ListItemText primary="Home " sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' />
-            </ListItemButton> <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+            </ListItemButton>
+             <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
               <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
                 <MdOutlineAnalytics size={25} className="text-[#3F2860]" />
               </ListItemIcon>
               <ListItemText primary="Analytics" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' onClick={()=>navigate("/analytics")} />
+            </ListItemButton>
+            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+              <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
+                <LuCalendarCheck2 size={25} className="text-[#3F2860]" />
+              </ListItemIcon>
+              <ListItemText primary="Appointment" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' onClick={()=>navigate("/appointment")} />
             </ListItemButton>
           </ListItem>
 
@@ -163,6 +172,7 @@ export default function MiniDrawer() {
             <Route path="patient" element={<Patient />} />
           </Route>
           <Route path='/temp' element={<QuestionTemp/>} />
+          <Route path='appointment' element={<ManageConsultation/>}/>
         </Routes>
       </Box>
     </Box>

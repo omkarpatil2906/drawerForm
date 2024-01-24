@@ -15,11 +15,11 @@ import { MdDelete } from "react-icons/md";
 import { toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function ConsultationCharges() {
+function ConsultationCharges({ selectedDepData }) {
   const d = new Date();
   const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const defaultDay = daysOfWeek[d.getDay()];
-
+  console.log(defaultDay);
 
   const obj = {
     fromTime: "",
@@ -34,10 +34,9 @@ function ConsultationCharges() {
   const [formData, setFormData] = useState(obj);
   const [tableData, setTableData] = useState([]);
 
-
   const HandleChange = (event) => {
     const { name, value, type, checked } = event.target;
-  
+
     setFormData((prevFormData) => {
       if (type === 'checkbox') {
         return { ...prevFormData, [name]: checked };
@@ -46,8 +45,6 @@ function ConsultationCharges() {
       }
     });
   };
-  
-
 
   const AddFromTime = (e) => {
     setFormData({ ...formData, fromTime: e.format("HH:MM A") });
@@ -58,19 +55,31 @@ function ConsultationCharges() {
   };
 
   const submitData = () => {
+    if (selectedDepData.length === 0) {
+      toast.warning('Please select at least one department!', {
+        position: 'top-right',
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        transition: Bounce,
+      });
+      return;
+    }
 
     const isTimeSlotExists = tableData.some((item) => {
       const sameDay = item.day === formData.day;
-    
       return sameDay && (
         (formData.fromTime >= item.fromTime && formData.fromTime < item.toTime) ||
         (formData.toTime > item.fromTime && formData.toTime <= item.toTime) ||
         (formData.toTime <= item.fromTime && formData.toTime >= item.toTime)
       );
     });
-    
     if (isTimeSlotExists) {
-      toast.error('Time slot already booked!', {
+      toast.warning('Time slot already booked!', {
         position: 'top-right',
         autoClose: 1000,
         hideProgressBar: false,
@@ -85,8 +94,10 @@ function ConsultationCharges() {
     else if (
       formData.fromTime === "" ||
       formData.toTime === "" ||
-      (formData.consultationCharges === "" && formData.isFree === true ? formData.consultationCharges : 0) ||
+      (formData.isFree ? false : formData.consultationCharges === "") ||
       (formData.followUpApplication && formData.followCharges === "")
+
+
     ) {
       toast.error('Fill all input Fields!', {
         position: "top-right",
@@ -151,13 +162,13 @@ function ConsultationCharges() {
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Week</InputLabel>
               <Select label="Week" onChange={HandleChange} defaultValue={defaultDay} name="week">
-                <MenuItem value="Sunday">Sunday</MenuItem>
                 <MenuItem value="Monday">Monday</MenuItem>
                 <MenuItem value="Tuesday">Tuesday</MenuItem>
                 <MenuItem value="Wednesday">Wednesday</MenuItem>
                 <MenuItem value="Thursday">Thursday</MenuItem>
                 <MenuItem value="Friday">Friday</MenuItem>
                 <MenuItem value="Saturday">Saturday</MenuItem>
+                <MenuItem value="Sunday">Sunday</MenuItem>
               </Select>
 
             </FormControl>
@@ -241,38 +252,47 @@ function ConsultationCharges() {
           </div>
         </div>
       </div>
-      <div className='mt-7'>
-        <table className='w-full overflow-x-auto'>
-          <tr className='bg-blue-300  '>
-            <th className='p-3'>Action</th>
-            <th className='p-3'>From Time</th>
-            <th className='p-3'>To time</th>
-            <th className='p-3'>Consultation Charge</th>
-            <th className='p-3'>Follow Up charge</th>
-            <th className='p-3'>Active</th>
-            <th className='p-3'>isfree</th>
-            <th className='p-3'>Day</th>
-          </tr>
-          {
-            tableData.map((item, i) => (
-              <tr className='text-center' key={i} >
-                <td className='p-3 text-red-600 text-2xl text-center' onClick={() => handleDelete(i)}><MdDelete /></td>
-                <td className='p-3 '>{item.fromTime}</td>
-                <td className='p-3'>{item.toTime}</td>
-                <td className='p-3'>{item.isFree === true ? 0 : item.consultationCharges}</td>
-                <td className='p-3'>{item.followUpApplication === true ? item.followCharges : 0}</td>
-                <td className='p-3'><button className='border-2 border-green-500 px-4 text-green-500 font-semibold pb-1  rounded-md'> Active</button></td>
-                <td className='p-3'>{item.isFree === true ? 'Yes' : 'No'}</td>
-                <td className='p-3'>{item.day}</td>
-              </tr>
-            ))
-          }
 
-        </table>
+      {tableData.length > 0 ? (
+      <div className="overflow-hidden rounded-lg border border-gray-200 shadow-md mt-5">
+        <table className="w-full border-collapse bg-white text-left text-sm text-gray-500">
+          <thead className="bg-blue-200">
+            <tr>
+              <th scope="col" className="px-6 py-4 font-medium text-gray-900">Action</th>
+              <th scope="col" className="px-6 py-4 font-medium text-gray-900">From Time</th>
+              <th scope="col" className="px-6 py-4 font-medium text-gray-900">To time</th>
+              <th scope="col" className="px-6 py-4 font-medium text-gray-900">Consultation Charge</th>
+              <th scope="col" className="px-6 py-4 font-medium text-gray-900">Follow Up charge</th>
+              <th scope="col" className="px-6 py-4 font-medium text-gray-900">Active</th>
+              <th scope="col" className="px-6 py-4 font-medium text-gray-900">isfree</th>
+              <th scope="col" className="px-6 py-4 font-medium text-gray-900">Day</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tableData.map((item, i) => (
+              <tr className='text-center' key={i}>
+                <td className='p-3 text-red-600 text-2xl text-center' onClick={() => handleDelete(i)}><MdDelete /></td>
+                <td className="px-6 py-4">{item.fromTime}</td>
+                <td className="px-6 py-4">{item.toTime}</td>
+                <td className="px-6 py-4">{item.isFree === true ? 0 : item.consultationCharges}</td>
+                <td className="px-6 py-4">{item.followUpApplication === true ? item.followCharges : 0}</td>
+                <td className="px-6 py-4"><button className='border-2 border-green-500 px-4 text-green-500 font-semibold pb-1 rounded-md'> Active</button></td>
+                <td className="px-6 py-4">{item.isFree === true ? 'Yes' : 'No'}</td>
+                <td className="px-6 py-4">{item.day}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table> 
       </div>
+       ) : (
+        <p className="text-center text-lg mt-8 text-gray-500 font-semibold">
+          Table is empty. Add data using the form above.
+        </p>
+      )}
 
     </div>
   )
 }
 
 export default ConsultationCharges
+
