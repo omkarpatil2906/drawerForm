@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Select from 'react-select';
 import { useNavigate } from 'react-router-dom'
 
 
 function Staff() {
-  const [selectOption, setSelectOption] = useState(null)
-
   const options = [
     { id: 1, value: 'Radiology template for consultant', label: 'Radiology template for consultant', path: '/temp' },
     { id: 2, value: 'Pathiology template for consultant', label: 'Pathiology template for consultant', path: '/temp' },
@@ -18,9 +16,6 @@ function Staff() {
     { id: 1, label: "All" }
   ]
 
-  const handleOnChange = (selectOption) => {
-    setSelectOption(selectOption)
-  }
 
   const navigate = useNavigate()
   const handleSelectChange = (option) => {
@@ -31,10 +26,8 @@ function Staff() {
 
   return (
     <div className='m-5 space-y-3'>
-      <Select options={options1} onChange={handleOnChange} />
-      {selectOption &&
-        <Select options={options} onChange={handleSelectChange} />
-      }
+      <Select options={options1} defaultValue={options1} isDisabled />
+        <Select options={options}  onChange={handleSelectChange}  menuIsOpen  />
     </div>
   )
 }

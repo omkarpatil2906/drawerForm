@@ -35,21 +35,20 @@ function Department({ selectedDepData, setSelectedDepData }) {
     <div className='m-2'>
       <Select
         options={options}
-        isMulti
         onChange={handleDepDataSelect}
-        value={selectedDepData.map(dep => ({ value: dep, label: dep }))}
+        defaultValue={options}
       />
       <div className='mt-3 border'>
         <table>
           <thead>
             <tr>
-              <th className='bg-[#34568B] text-white text-center p-2 w-[100vh]'>Department</th>
+              <th className='bg-[#3F2860] text-white text-center p-2 w-[100vh]'>Department</th>
             </tr>
           </thead>
           <tbody>
             {depData.map((user) => (
               <tr key={user.id}>
-                <td className={`border p-2 cursor-pointer ${selectedDepData.includes(user.department) ? 'bg-blue-400' : ''}`}
+                <td className={`border p-2 cursor-pointer ${selectedDepData.includes(user.department) ? 'bg-[#34568B] text-white' : ''}`}
                 onClick={()=>handleDepDataSelect(user.department)}>
                   {user.department}
                 </td>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -23,11 +23,17 @@ import Patient from '../rightcolumn/form/Patient';
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import DashBoard from '../rightcolumn/dashboard/DashBoard';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { MdOutlineAnalytics } from "react-icons/md";
 import QuestionTemp from '../rightcolumn/form/QuestionTemp';
 import ManageConsultation from '../rightcolumn/task/ManageConsultation';
 import { LuCalendarCheck2 } from "react-icons/lu";
+import Doctor from '../rightcolumn/doctor/Doctor';
+import { FaUserDoctor } from "react-icons/fa6";
+import { AiFillSchedule } from "react-icons/ai";
+import Schedule from '../rightcolumn/doctorSchedule/Schedule';
+import PatientList from '../rightcolumn/patient/PatientList';
+import AddPatinet from '../rightcolumn/patient/AddPatient';
 
 
 const drawerWidth = 240;
@@ -132,47 +138,71 @@ export default function MiniDrawer() {
         <Divider />
 
         <List>
-
           <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={()=>navigate("/")} >
+            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} onClick={() => navigate("/")} >
               <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
                 <MdOutlineDashboardCustomize size={25} className="text-[#3F2860]" />
               </ListItemIcon>
               <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] ' />
             </ListItemButton>
-            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}  onClick={()=>navigate("/home")}>
+            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} onClick={() => navigate("/home")}>
               <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
                 <FaHome size={25} className="text-[#3F2860]" />
               </ListItemIcon>
               <ListItemText primary="Home " sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' />
             </ListItemButton>
-             <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
               <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
                 <MdOutlineAnalytics size={25} className="text-[#3F2860]" />
               </ListItemIcon>
-              <ListItemText primary="Analytics" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' onClick={()=>navigate("/analytics")} />
+              <ListItemText primary="Analytics" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' onClick={() => navigate("/analytics")} />
             </ListItemButton>
             <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
               <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
                 <LuCalendarCheck2 size={25} className="text-[#3F2860]" />
               </ListItemIcon>
-              <ListItemText primary="Appointment" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' onClick={()=>navigate("/appointment")} />
+              <ListItemText primary="Appointment" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' onClick={() => navigate("/appointment")} />
+            </ListItemButton>
+
+            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+              <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
+                <FaUserDoctor size={25} className="text-[#3F2860]" />
+              </ListItemIcon>
+              <ListItemText primary="Doctors" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' onClick={() => navigate("/doctor")} />
+            </ListItemButton>
+
+            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+              <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
+                <LuCalendarCheck2 size={25} className="text-[#3F2860]" />
+              </ListItemIcon>
+              <ListItemText primary="Patient " sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' onClick={() => navigate("/patient")} />
+            </ListItemButton>
+
+            <ListItemButton sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }} >
+              <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }} >
+                <AiFillSchedule size={25} className="text-[#3F2860]" />
+              </ListItemIcon>
+              <ListItemText primary="Doctor Schedule" sx={{ opacity: open ? 1 : 0 }} className='text-[#3F2860] font-bold' onClick={() => navigate("/schedule")} />
             </ListItemButton>
           </ListItem>
-
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, }}>
         <DrawerHeader />
         <Routes>
-          <Route path='/' element={<DashBoard/>} />
+          <Route path='/' element={<DashBoard />} />
           <Route path="/home" element={<FeedbackForm />} >
-            <Route path="consultant" element={<Consultant />} />
+            <Route path='consultant' element={<Consultant />} />
             <Route path="staff" element={<Staff />} />
             <Route path="patient" element={<Patient />} />
           </Route>
-          <Route path='/temp' element={<QuestionTemp/>} />
-          <Route path='appointment' element={<ManageConsultation/>}/>
+          <Route path='/temp' element={<QuestionTemp />} />
+          <Route path='/appointment' element={<ManageConsultation />} />
+          <Route path='/doctor' element={<Doctor />} />
+          <Route path='/patient' element={<PatientList />}/>
+          <Route path='/add_patient' element={<AddPatinet/>}/>
+          
+          <Route path='/schedule' element={<Schedule />} />
         </Routes>
       </Box>
     </Box>

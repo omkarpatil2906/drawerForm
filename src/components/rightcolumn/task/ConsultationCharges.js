@@ -285,9 +285,7 @@ function ConsultationCharges({ selectedDepData }) {
         </table> 
       </div>
        ) : (
-        <p className="text-center text-lg mt-8 text-gray-500 font-semibold">
-          Table is empty. Add data using the form above.
-        </p>
+       <p></p>
       )}
 
     </div>

@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 function FeedbackForm() {
     return (
-        <div className='lg:flex space-y-4'>
+        <div className='lg:flex space-y-4 p-6'>
             <div className='w-full lg:w-[75%] lg:space-y-32'>
                 <div>
                     <h1 className='font-bold text-lg uppercase lg:text-3xl '>Please select feedBack Form</h1>
@@ -12,7 +12,7 @@ function FeedbackForm() {
                     <img src="https://www.culturemonkey.io/employee-engagement/content/images/size/w1200/2023/05/employee-feedback-program.png" className='lg:h-[300px] lg:w-[440px] border-black shadow-xl' alt="" />
                 </div>
             </div>
-            <div className='w-full lg:w-[45%] border-2 rounded-md border-[#3F2860] h-[440px] lg:h-[500px] p-5'>
+            <div className='w-full lg:w-[45%] border border-[#3F2860] shadow-xl h-[440px] lg:h-[450px] p-5'>
                 <ul className='flex font-bold justify-around'>
                     <NavLink to="consultant">
                         <li className='p-2 w-16 text-[8px] md:w-32 md:text-base border-2 border-[#3F2860] rounded-md text-center'>Consultant</li>
